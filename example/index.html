@@ -1,0 +1,35 @@
+<html>
+    <head>
+	<title>Example</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+	      crossorigin=""/>
+	
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		     crossorigin=""></script>
+	
+	<script type="text/javascript" src="../src/leaflet.crosshairs.control.js"></script>
+    </head>
+    <body>
+	<div id="map" style="height:500px; width:100%"></div>
+    </body>
+    <script type="text/javascript">
+
+     var map = L.map("map");
+     map.setView([37.61799, -122.370943], 13);
+
+     var cr = new L.Control.Crosshairs();
+     console.log(cr);
+
+     cr.addTo(map);
+     
+     var layer_url = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+     var layer_args = {};
+     
+     var layer = L.tileLayer(layer_url, layer_args);
+     layer.addTo(map);
+     
+    </script>
+</html>
+
