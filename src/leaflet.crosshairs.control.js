@@ -2,10 +2,13 @@
 
 L.Control.Crosshairs = L.Control.extend({
     _map: null,
-    _latlon: true,
-    options: {},
+    options: {
+        position: 'topright',
+	coordinates: 'latlon',
+    },
 
     onAdd: function(map) {
+	
 	this._map = map;
 
 	var self = this;
@@ -14,20 +17,35 @@ L.Control.Crosshairs = L.Control.extend({
 	window.onresize = function(){
 	    self.draw_crosshairs();
 	};
-	
-	map.on("moveend", function(){
 
+	var draw_coords = function(){
 	    var pos = map.getCenter();
 	    var lat = pos['lat'];
 	    var lon = pos['lng'];	  
 	    
 	    var zoom = map.getZoom();
 	    
-	    var ll = lat.toFixed(6) + ", " + lon.toFixed(6) + " #" + zoom.toFixed(2);
+	    var ll;
+
+	    if (self.options.coordinates == "lonlat"){
+		ll = lon.toFixed(6) + ", " + lat.toFixed(6) + " #" + zoom.toFixed(2);
+	    } else {	    
+		ll = lat.toFixed(6) + ", " + lon.toFixed(6) + " #" + zoom.toFixed(2);
+	    }
+	    
 	    self.div.innerText = ll;	    
+	};
+	
+	map.on("moveend", function(){
+	    draw_coords();
 	});
 	
-	this.div = L.DomUtil.create('div','leaflet-crosshairs-container');
+	this.div = L.DomUtil.create('div','leaflet-crosshairs-container leaflet-bar');
+
+	// This is necessary in order to copy/paste
+	L.DomEvent.disableClickPropagation(this.div);
+	
+	draw_coords();
 	return this.div;	
     },
     
