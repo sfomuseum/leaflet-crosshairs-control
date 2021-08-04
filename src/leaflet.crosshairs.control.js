@@ -8,37 +8,31 @@ L.Control.Crosshairs = L.Control.extend({
     onAdd: function(map) {
 	this._map = map;
 
-	map.onmoveend = self.draw_coords;
+	var self = this;
+	this.draw_crosshairs();
+	
+	window.onresize = function(){
+	    self.draw_crosshairs();
+	};
+	
+	map.on("moveend", function(){
+
+	    var pos = map.getCenter();
+	    var lat = pos['lat'];
+	    var lon = pos['lng'];	  
+	    
+	    var zoom = map.getZoom();
+	    
+	    var ll = lat.toFixed(6) + ", " + lon.toFixed(6) + " #" + zoom.toFixed(2);
+	    self.div.innerText = ll;	    
+	});
 	
 	this.div = L.DomUtil.create('div','leaflet-crosshairs-container');
-	this.draw_crosshairs();
 	return this.div;	
-    },
-
-    'draw_coords': function(){
-	
-	var pos = map.getCenter();
-	var lat = pos['lat'];
-	var lon = pos['lng'];	  
-	
-	var zoom = map.getZoom();
-	
-	var ll = undefined;
-	
-	if (_latlon){
-	    ll = lat.toFixed(6) + ", " + lon.toFixed(6) + " #" + zoom.toFixed(2);
-	}
-	
-	else {	    
-	    ll = lon.toFixed(6) + ", " + lat.toFixed(6) + " #" + zoom.toFixed(2);
-	}
-	
-	this.div.innerText = ll;	    
-	console.log(ll);
     },
     
     'draw_crosshairs': function(){
-
+	
 	var map_el = this._map.getContainer();
 	
 	var container = map_el.getBoundingClientRect();
@@ -70,9 +64,13 @@ L.Control.Crosshairs = L.Control.extend({
 	
 	style = style.join(";");
 	
-	crosshairs = document.createElement("div");
-	crosshairs.setAttribute("id", "crosshairs");
-	map_el.appendChild(crosshairs);
+	var crosshairs = document.getElementById("crosshairs");
+
+	if (! crosshairs){
+	    crosshairs = document.createElement("div");
+	    crosshairs.setAttribute("id", "crosshairs");
+	    map_el.appendChild(crosshairs);
+	}
 	
 	crosshairs.style.cssText = style;
 	return true;
