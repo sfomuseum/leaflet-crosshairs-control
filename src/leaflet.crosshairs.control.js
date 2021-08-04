@@ -1,4 +1,4 @@
-// version v0.0.1
+// version v1.0.0
 
 L.Control.Crosshairs = L.Control.extend({
     _map: null,
